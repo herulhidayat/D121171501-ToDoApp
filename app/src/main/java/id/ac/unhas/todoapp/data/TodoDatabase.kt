@@ -12,11 +12,11 @@ import id.ac.unhas.todoapp.data.db.entity.TodoItemEntity
     exportSchema = false,
     version = 1
 )
-abstract class TodoDatabse : RoomDatabase() {
+abstract class TodoDatabase : RoomDatabase() {
     abstract fun todoItemDao(): TodoItemDao
 
     companion object {
-        @Volatile private var instance: TodoDatabse? = null
+        @Volatile private var instance: TodoDatabase? = null
         private val LOCK = Any ()
 
         operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
@@ -25,7 +25,7 @@ abstract class TodoDatabse : RoomDatabase() {
 
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext,
-                TodoDatabse::class.java, "todo.db")
+                TodoDatabase::class.java, "todo.db")
                 .build()
     }
 }
