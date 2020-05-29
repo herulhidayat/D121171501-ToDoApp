@@ -6,9 +6,9 @@ import id.ac.unhas.todoapp.data.repository.TodoRepository
 
 class TodoViewModelFactory(
     private val todoRepository: TodoRepository
-) : ViewModelProvider.NewInstanceFactory(){
+) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return TodoViewModel(todoRepository) as T
+        return TodoViewModel(todoRepository) as  T
     }
 }

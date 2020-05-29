@@ -4,17 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:weightSum="100"
-    android:id="@+id/list_item"
-    android:background="@color/colorPrimary">
+    android:id="@+id/list_item">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="10"
+        android:layout_gravity="center_vertical"
+        android:buttonTint="@color/offWhite"/>
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="80"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:text="Simple Text"
+        android:layout_weight="70"
         android:layout_gravity="center_vertical"
         android:textColor="@color/offWhite" />
 
@@ -25,7 +29,8 @@
         android:layout_height="30dp"
         android:layout_gravity="center_vertical|end"
         android:layout_weight="10"
-        android:tint="@color/offWhite"/>
+        android:tint="@color/offWhite"
+        android:contentDescription="@string/edit_button" />
 
     <ImageView
         android:id="@+id/ivDelete"
@@ -34,6 +39,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center_vertical|end"
         android:layout_weight="10"
-        android:tint="@color/offWhite"/>
+        android:tint="@color/offWhite"
+        android:contentDescription="@string/delete_button" />
 
 </LinearLayout>

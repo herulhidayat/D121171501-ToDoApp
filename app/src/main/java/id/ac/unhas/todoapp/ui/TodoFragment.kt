@@ -9,26 +9,27 @@ import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import id.ac.unhas.todoapp.R
+import com.ac.unhas.todoapp.R
 import id.ac.unhas.todoapp.data.db.entity.TodoItemEntity
 import id.ac.unhas.todoapp.ui.adapters.TodoAdapter
 import id.ac.unhas.todoapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.dialog.view.*
-import kotlinx.android.synthetic.main.todo_fragment.*
+import kotlinx.android.synthetic.main.todo_list_fragment.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
-class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoAdapterListener{
+class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoListAdapterListener {
+
     override val kodein by closestKodein()
 
     private val viewModelFactory: TodoViewModelFactory by instance()
     private lateinit var viewModel: TodoViewModel
-    private lateinit var todoData: LiveData<out List<TodoItemEntity>>
+    private lateinit var todoListData: LiveData<out List<TodoItemEntity>>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.todo_fragment, null)
+        return inflater.inflate(R.layout.todo_list_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,27 +43,32 @@ class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoAdapterListe
 
     private fun fetchData() = launch {
         val todoList = viewModel.todoList.await()
-        todoList.observe(viewLifecycleOwner, Observer {
+        todoList.observe(this@TodoFragment, Observer {
             if (it == null) return@Observer
-            todoData = todoList
+            todoListData = todoList
 
             bindUI()
         })
     }
 
     private fun bindUI() {
-        when(todoData.value!!.isEmpty()) {
-            true ->{
+        when(todoListData.value!!.isEmpty()) {
+            true -> {
                 tvPlaceholder.visibility = View.VISIBLE
-                lvItems.visibility = View.GONE
+                lvTodos.visibility = View.GONE
             }
             else -> {
-                val adapter = activity?.let {TodoAdapter(it, todoData)}
+                val adapter = activity?.let {
+                    TodoAdapter(
+                        it,
+                        todoListData
+                    )
+                }
                 adapter?.setAdapterListener(this)
-                lvItems.adapter = adapter
+                lvTodos.adapter = adapter
 
                 tvPlaceholder.visibility = View.GONE
-                lvItems.visibility = View.VISIBLE
+                lvTodos.visibility = View.VISIBLE
             }
         }
 
@@ -72,14 +78,15 @@ class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoAdapterListe
     }
 
     private fun showDialog(item: TodoItemEntity?) {
-        val inflater =activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         val dialogLayout = inflater.inflate(R.layout.dialog, null)
+        // set title if item exists
         dialogLayout.etTitle.setText(item?.title)
 
         val dialog = AlertDialog.Builder(activity)
             .setView(dialogLayout)
-            .setPositiveButton("Save", null)
+            .setPositiveButton(resources.getString(R.string.save_button), null)
             .show()
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -90,13 +97,18 @@ class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoAdapterListe
                 }
                 dialog.dismiss()
             } else {
-                dialogLayout.tilTitle.error = getString(R.string.dialog_warning)
+                dialogLayout.tilTitle.error = resources.getString(R.string.dialog_warning)
             }
         }
     }
 
     private fun createTodo(title: String) {
-        val todoItem = TodoItemEntity(todoData.value!!.size, title, false)
+        val todoItem =
+            TodoItemEntity(
+                todoListData.value!!.size,
+                title,
+                false
+            )
         viewModel.upsertTodoItem(todoItem)
     }
 
@@ -105,11 +117,18 @@ class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoAdapterListe
         viewModel.upsertTodoItem(item)
     }
 
-    override fun deleteItem(item: TodoItemEntity) {
-        viewModel.deleteTodoItem(item)
-    }
-
+    // interface method to edit item
     override fun editItem(item: TodoItemEntity) {
         showDialog(item)
+    }
+
+    // interface method to create item
+    override fun upsertItem(item: TodoItemEntity) {
+        viewModel.upsertTodoItem(item)
+    }
+
+    // interface method to delete item
+    override fun deleteItem(item: TodoItemEntity) {
+        viewModel.deleteTodoItem(item)
     }
 }

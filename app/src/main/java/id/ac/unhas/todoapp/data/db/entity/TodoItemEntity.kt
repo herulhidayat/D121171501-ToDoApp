@@ -4,7 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "todo_items")
-class TodoItemEntity(size: Int, title: String, b: Boolean) {
+data class TodoItemEntity (
     @PrimaryKey(autoGenerate = false)
-    var id: Int = 0
-}
+    val id: Int,
+    var title: String,
+    var isChecked: Boolean
+)

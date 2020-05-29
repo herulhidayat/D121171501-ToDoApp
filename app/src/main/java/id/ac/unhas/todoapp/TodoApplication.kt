@@ -13,16 +13,28 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 
-class TodoApplication : Application(), KodeinAware {
+class
+TodoApplication : Application(), KodeinAware {
     override val kodein = Kodein.lazy {
         import(androidXModule(this@TodoApplication))
 
-        //setup instances
-        bind() from singleton { TodoDatabase(instance()) }
+        // Setup instances
+        bind() from singleton {
+            TodoDatabase(
+                instance()
+            )
+        }
         bind() from singleton { instance<TodoDatabase>().todoItemDao() }
 
-        bind<TodoRepository>() with singleton { TodoRepositoryImpl(instance()) }
-        bind() from provider { TodoViewModelFactory(instance()) }
+        bind<TodoRepository>() with singleton {
+            TodoRepositoryImpl(
+                instance()
+            )
+        }
+        bind() from provider {
+            TodoViewModelFactory(
+                instance()
+            )
+        }
     }
-
 }

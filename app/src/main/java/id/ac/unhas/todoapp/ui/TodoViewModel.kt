@@ -20,5 +20,4 @@ class TodoViewModel(
     fun deleteTodoItem(item: TodoItemEntity) {
         todoRepository.deleteTodoItem(item)
     }
-
 }
