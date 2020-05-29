@@ -54,6 +54,7 @@ class TodoAdapter(
         holder.ivDelete!!.setOnClickListener {
             callBack.deleteItem(item)
         }
+        return view!!
     }
 
     override fun getItem(position: Int): Any {

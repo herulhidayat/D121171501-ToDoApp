@@ -11,4 +11,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title">ToDo App</string>
     <string name="placeholder_description">Tambahkan list mu dengan klik tombol di bawah</string>
+    <string name="hint_text">Judul</string>
+    <string name="dialog_warning">Masukkan judul sebelum klik save</string>
+    <string name="todo_fragment_label">Todo fragment</string>
 </resources>
