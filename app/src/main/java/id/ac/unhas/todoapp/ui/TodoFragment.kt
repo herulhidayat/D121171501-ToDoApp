@@ -13,7 +13,9 @@ import com.ac.unhas.todoapp.R
 import id.ac.unhas.todoapp.data.db.entity.TodoItemEntity
 import id.ac.unhas.todoapp.ui.adapters.TodoAdapter
 import id.ac.unhas.todoapp.ui.base.ScopedFragment
+import kotlinx.android.synthetic.main.dialog.*
 import kotlinx.android.synthetic.main.dialog.view.*
+import kotlinx.android.synthetic.main.dialog.view.etNote
 import kotlinx.android.synthetic.main.todo_list_fragment.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -83,6 +85,7 @@ class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoListAdapterL
         val dialogLayout = inflater.inflate(R.layout.dialog, null)
         // set title if item exists
         dialogLayout.etTitle.setText(item?.title)
+        dialogLayout.etNote.setText(item?.notex)
 
         val dialog = AlertDialog.Builder(activity)
             .setView(dialogLayout)
@@ -92,28 +95,31 @@ class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoListAdapterL
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             if (dialogLayout.etTitle.text.toString().isNotEmpty()) {
                 when (item) {
-                    null -> createTodo(dialogLayout.etTitle.text.toString())
-                    else -> editTodo(item, dialogLayout.etTitle.text.toString())
+                    null -> createTodo(dialogLayout.etTitle.text.toString(), dialogLayout.etNote.text.toString())
+                    else -> editTodo(item, dialogLayout.etTitle.text.toString(), dialogLayout.etNote.text.toString())
                 }
                 dialog.dismiss()
             } else {
                 dialogLayout.tilTitle.error = resources.getString(R.string.dialog_warning)
+                dialogLayout.tilNote.error = resources.getString(R.string.dialog_warning)
             }
         }
     }
 
-    private fun createTodo(title: String) {
+    private fun createTodo(title: String, notex: String) {
         val todoItem =
             TodoItemEntity(
                 todoListData.value!!.size,
-                title,
+                title, notex,
                 false
             )
+
         viewModel.upsertTodoItem(todoItem)
     }
 
-    private fun editTodo(item: TodoItemEntity, title: String) {
+    private fun editTodo(item: TodoItemEntity, title: String, notex: String) {
         item.title = title
+        item.notex = notex
         viewModel.upsertTodoItem(item)
     }
 
@@ -131,4 +137,5 @@ class TodoFragment : ScopedFragment(), KodeinAware, TodoAdapter.TodoListAdapterL
     override fun deleteItem(item: TodoItemEntity) {
         viewModel.deleteTodoItem(item)
     }
+
 }

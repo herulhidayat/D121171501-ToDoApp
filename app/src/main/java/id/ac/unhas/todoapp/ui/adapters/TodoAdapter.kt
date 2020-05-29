@@ -42,6 +42,7 @@ class TodoAdapter(
             holder = ViewHolder()
             holder.checkbox = view.checkbox
             holder.tvTitle = view.tvTitle
+            holder.tvNote = view.tvNote
             holder.ivEdit = view.ivEdit
             holder.ivDelete = view.ivDelete
 
@@ -64,6 +65,7 @@ class TodoAdapter(
         }
 
         holder.tvTitle!!.text = item.title
+        holder.tvNote!!.text = item.notex
 
         // Edit item if icon pressed
         holder.ivEdit!!.setOnClickListener {
@@ -85,6 +87,7 @@ class TodoAdapter(
     override fun getCount(): Int { return data.value!!.size }
 
     private inner class ViewHolder {
+        internal var tvNote: TextView? = null
         internal var checkbox: CheckBox? = null
         internal var tvTitle: TextView? = null
         internal var ivEdit: ImageView? = null

@@ -2,11 +2,12 @@
     <string name="app_name">ToDo App</string>
     <string name="todoListFragmentLabel">Todo List Fragment</string>
     <string name="list_item_hint">List Item</string>
-    <string name="todo_hint">contoh: Buang sampah</string>
+    <string name="todo_hint">Judul, contoh: Buang sampah</string>
     <string name="empty_todo_placeholder">Buat listmu, klik tombol di bawah</string>
     <string name="save_button">Save</string>
-    <string name="title">ToDo App</string>
+    <string name="title">Ayo Kerjakan</string>
     <string name="delete_button">Delete button</string>
     <string name="edit_button">Edit button</string>
     <string name="dialog_warning">Isi dulu baru klik save</string>
+    <string name="todo_hint_note">Note, contoh: pisah sampah basah</string>
 </resources>
